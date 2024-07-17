@@ -42,11 +42,22 @@ do
         # Iterate over each domain in the array
         for DOMAIN in $(echo $DOMAINS | tr ',' ' '); do
 
-            # Update subdomain DNS record, allow failures
-            ./tipctl.phar domain:dns:updatednsentry "$DOMAIN" "$SUBRECORD" $TTL "$TYPE" "$CurrentIP"
+            # Update subdomain DNS record, silently
+            ./tipctl.phar domain:dns:updatednsentry -n -q "$DOMAIN" "$SUBRECORD" $TTL "$TYPE" "$CurrentIP" 2> /dev/null
+
+            # Check if the IP has been set for the subdomain
+            if [ $? == 0 ]; then
+
+                # IP has been set for the current subdomain
+                echo "$(date +'%Y-%m-%d %T'): Set $SUBRECORD.$DOMAIN -> $CurrentIP"
+            else
+
+                # Failed to set IP for the current subdomain
+                echo "$(date +'%Y-%m-%d %T'): Failed to set $SUBRECORD.$DOMAIN -> $CurrentIP"
+            fi
 
             # Update root domain DNS record
-            ./tipctl.phar domain:dns:updatednsentry "$DOMAIN" "$ROOTRECORD" $TTL "$TYPE" "$CurrentIP"
+            ./tipctl.phar domain:dns:updatednsentry -n "$DOMAIN" "$ROOTRECORD" $TTL "$TYPE" "$CurrentIP"
 
             # Check if the IP has been set for the root domain
             if [ $? == 0 ]; then
