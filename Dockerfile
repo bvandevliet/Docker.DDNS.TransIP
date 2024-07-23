@@ -12,4 +12,7 @@ WORKDIR /app
 RUN chmod +x ./run.sh
 ADD --chmod=755 https://github.com/transip/tipctl/releases/latest/download/tipctl.phar tipctl.phar
 
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
 CMD /app/run.sh
