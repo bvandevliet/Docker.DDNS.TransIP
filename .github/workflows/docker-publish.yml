@@ -1,14 +1,23 @@
 name: Docker publish
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '45 0 * * *'
+    - cron: "45 0 * * *"
   push:
     branches:
-      - '**'
+      - "**"
+    paths-ignore:
+      - "README.md"
+      - "docs/**"
+      - ".github/**"
   pull_request:
     branches:
-      - '**'
+      - "**"
+    paths-ignore:
+      - "README.md"
+      - "docs/**"
+      - ".github/**"
 
 permissions:
   contents: write
@@ -17,11 +26,9 @@ permissions:
   security-events: write
 
 jobs:
-
   gitversion:
     name: Execute GitVersion and create tag
     uses: bvandevliet/Actions.Shared/.github/workflows/git-version.yml@master
-
   build-push:
     needs: [gitversion]
     name: Build and push
