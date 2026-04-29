@@ -11,13 +11,6 @@ on:
       - "README.md"
       - "docs/**"
       - ".github/**"
-  pull_request:
-    branches:
-      - "**"
-    paths-ignore:
-      - "README.md"
-      - "docs/**"
-      - ".github/**"
 
 permissions:
   contents: write
@@ -34,13 +27,13 @@ jobs:
     name: Build and push
     uses: bvandevliet/Actions.Shared/.github/workflows/docker-build-push.yml@master
     with:
-      CR_REGISTRY: docker.io
       IMAGE_NAME: ${{ github.repository_owner }}/tipddns
       majorMinorPatch: ${{ needs.gitversion.outputs.majorMinorPatch }}
       preReleaseLabel: ${{ needs.gitversion.outputs.preReleaseLabel }}
       semVer: ${{ needs.gitversion.outputs.semVer }}
       assemblySemVer: ${{ needs.gitversion.outputs.assemblySemVer }}
       assemblySemFileVer: ${{ needs.gitversion.outputs.assemblySemFileVer }}
+      CR_REGISTRY: docker.io
     secrets:
       CR_USERNAME: ${{ secrets.CR_USERNAME }}
       CR_PASSWORD: ${{ secrets.CR_PASSWORD }}
